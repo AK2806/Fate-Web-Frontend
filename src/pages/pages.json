@@ -1,0 +1,36 @@
+[
+    {
+        "type": "singleton",
+        "name": "login",
+        "jsFile": "login.js",
+        "title": "登陆",
+        "pageFile": "login.html"
+    },
+    {
+        "type": "singleton",
+        "name": "register",
+        "jsFile": "register.js",
+        "title": "注册",
+        "pageFile": "register.html"
+    },
+    {
+        "type": "assembly",
+        "name": "index",
+        "jsFile": "index.js",
+        "title": "Home",
+        "templateFile": "account_console/container.ejs",
+        "contents": {
+            "contentFile": "index.html"
+        }
+    },
+    {
+        "type": "assembly",
+        "name": "charts",
+        "jsFile": "charts.js",
+        "title": "Charts",
+        "templateFile": "account_console/container.ejs",
+        "contents": {
+            "contentFile": "charts.html"
+        }
+    }
+]
