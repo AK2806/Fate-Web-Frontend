@@ -1,26 +1,36 @@
 [
     {
         "type": "singleton",
+        "name": "index",
+        "jsFile": "index.js",
+        "pageFile": "index.html"
+    },
+    {
+        "type": "singleton",
         "name": "login",
         "jsFile": "login.js",
-        "title": "登陆",
         "pageFile": "login.html"
     },
     {
         "type": "singleton",
         "name": "register",
         "jsFile": "register.js",
-        "title": "注册",
         "pageFile": "register.html"
     },
     {
+        "type": "singleton",
+        "name": "reset-password",
+        "jsFile": "reset-password.js",
+        "pageFile": "reset-password.html"
+    },
+    {
         "type": "assembly",
-        "name": "index",
-        "jsFile": "index.js",
+        "name": "home",
+        "jsFile": "home.js",
         "title": "Home",
         "templateFile": "account_console/container.ejs",
         "contents": {
-            "contentFile": "index.html"
+            "contentFile": "home.html"
         }
     },
     {

@@ -1,3 +1,7 @@
+import './init'
+import $ from 'jquery';
+import Chart from 'chart.js';
+
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function () {
 

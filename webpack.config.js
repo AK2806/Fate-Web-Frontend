@@ -16,9 +16,8 @@ pages.forEach(page => {
             htmlPlugins.push(new HtmlWebpackPlugin({
                 chunks: [page.name],
                 filename: `${page.name}.html`,
-                title: page.title,
                 favicon: Path.resolve(__dirname, 'src/img/favicon.ico'),
-                template: Path.resolve(__dirname, 'src/pages', page.pageFile)
+                template: 'html-loader!' + Path.resolve(__dirname, 'src/pages', page.pageFile)
             }));
             break;
         case "assembly":
