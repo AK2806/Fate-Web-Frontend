@@ -16,7 +16,11 @@ function login(email, password, captchaToken, captchaText) {
             resolve();
         })
         .catch(err => {
-            reject(err.response.data.message);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }
@@ -32,7 +36,11 @@ function askForPasswordReset(email, captchaToken, captchaText) {
             resolve();
         })
         .catch(err => {
-            reject(err.response.data.message);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }

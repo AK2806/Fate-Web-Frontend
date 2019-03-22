@@ -13,7 +13,11 @@ function resetPassword(token, password) {
             resolve();
         })
         .catch(err => {
-            reject(err.response.data.message);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }

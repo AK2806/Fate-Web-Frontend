@@ -9,7 +9,11 @@ function askForCaptcha() {
             resolve({token: resp.data.token, imageBase64: resp.data.imgBs64});
         })
         .catch((err) => {
-            reject(err);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }

@@ -15,7 +15,11 @@ function askForMailVerify(emailAddr, captchaToken, captchaText) {
             resolve();
         })
         .catch(err => {
-            reject(err.response.data.message);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }
@@ -31,7 +35,11 @@ function register(email, password, verifyCode) {
             resolve();
         })
         .catch(err => {
-            reject(err.response.data.message);
+            if (err.response) {
+                reject(err.response.data.message);
+            } else {
+                reject(err.message);
+            }
         });
     });
 }
