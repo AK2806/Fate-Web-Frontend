@@ -1,7 +1,11 @@
 const Path = require('path');
+const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const pages = require(Path.resolve(__dirname, 'src/pages/pages.json'));
 
@@ -10,27 +14,15 @@ let entries = {};
 let htmlPlugins = [];
 
 pages.forEach(page => {
-    entries[page.name] = Path.resolve(__dirname, 'src/js', page.jsFile);
-    switch (page.type) {
-        case "singleton":
-            htmlPlugins.push(new HtmlWebpackPlugin({
-                chunks: [page.name],
-                filename: `${page.name}.html`,
-                favicon: Path.resolve(__dirname, 'src/img/favicon.ico'),
-                template: 'html-loader!' + Path.resolve(__dirname, 'src/pages', page.pageFile)
-            }));
-            break;
-        case "assembly":
-            htmlPlugins.push(new HtmlWebpackPlugin({
-                chunks: [page.name],
-                filename: `${page.name}.html`,
-                title: page.title,
-                favicon: Path.resolve(__dirname, 'src/img/favicon.ico'),
-                template: Path.resolve(__dirname, 'src/pages', page.templateFile),
-                contents: page.contents
-            }));
-            break;
-    }
+    let chunkName = Path.basename(page.outputFile, '.html');
+    entries[chunkName] = Path.resolve(__dirname, 'src/js', page.jsFile);
+    htmlPlugins.push(new HtmlWebpackPlugin({
+        chunks: [chunkName],
+        filename: page.outputFile,
+        favicon: Path.resolve(__dirname, 'src/img/favicon.ico'),
+        template: Path.resolve(__dirname, 'src/pages', page.templateFile),
+        contents: page.contents
+    }));
 });
 
 module.exports = {
@@ -47,10 +39,12 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        ...htmlPlugins,
         new MiniCssExtractPlugin({
-            filename: isProduct ? '[name].min.css' : '[name].css'
-        })
+            filename: isProduct ? '[name].min.css' : '[name].css',
+            chunkFilename: isProduct ? '[id].min.css' : '[id].css',
+        }),
+        new VueLoaderPlugin(),
+        ...htmlPlugins
     ],
     module: {
         rules: [
@@ -60,7 +54,8 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env']
+                        presets: ['@babel/preset-env'],
+                        plugins: ['@babel/plugin-transform-runtime']
                     }
                 }
             },
@@ -74,21 +69,33 @@ module.exports = {
             {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: {
-                    loader: 'file-loader',
-                    options: {
-                        outputPath: 'img'
-                    }
+                    loader: 'file-loader'
                 }
             },
             {
                 test: /\.(ttf|eot|woff|woff2|otf)/,
                 use: {
-                    loader: 'file-loader',
-                    options: {
-                        outputPath: 'fonts'
-                    }
+                    loader: 'file-loader'
                 }
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
             }
         ]
+    },
+    optimization: isProduct ? {
+        minimizer: [
+            new TerserPlugin({
+                cache: true,
+                parallel: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    } : {},
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js'
+        }
     }
 }

@@ -1,46 +1,26 @@
 [
     {
-        "type": "singleton",
-        "name": "index",
+        "outputFile": "index.html",
         "jsFile": "index.js",
-        "pageFile": "index.html"
+        "templateFile": "index.html",
+        "contents": { }
     },
     {
-        "type": "singleton",
-        "name": "login",
-        "jsFile": "login.js",
-        "pageFile": "login.html"
+        "outputFile": "auth.html",
+        "jsFile": "auth.js",
+        "templateFile": "auth.html",
+        "contents": { }
     },
     {
-        "type": "singleton",
-        "name": "register",
-        "jsFile": "register.js",
-        "pageFile": "register.html"
-    },
-    {
-        "type": "singleton",
-        "name": "reset-password",
+        "outputFile": "reset-password.html",
         "jsFile": "reset-password.js",
-        "pageFile": "reset-password.html"
+        "templateFile": "reset-password.html",
+        "contents": { }
     },
     {
-        "type": "assembly",
-        "name": "home",
-        "jsFile": "home.js",
-        "title": "Home",
-        "templateFile": "account_console/container.ejs",
-        "contents": {
-            "contentFile": "home.html"
-        }
-    },
-    {
-        "type": "assembly",
-        "name": "charts",
-        "jsFile": "charts.js",
-        "title": "Charts",
-        "templateFile": "account_console/container.ejs",
-        "contents": {
-            "contentFile": "charts.html"
-        }
+        "outputFile": "home.html",
+        "jsFile": "console.js",
+        "templateFile": "console.html",
+        "contents": { }
     }
 ]

@@ -1,6 +1,4 @@
-import './init'
-import $ from 'jquery';
-import Chart from 'chart.js';
+import './container-init';
 
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function () {

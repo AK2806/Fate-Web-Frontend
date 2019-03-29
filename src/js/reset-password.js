@@ -1,61 +1,136 @@
-import './init'
 import $ from 'jquery';
-import axios from 'axios';
-import swal from 'sweetalert2';
+import 'jquery-validation';
+import 'bootstrap';
+import Axios from 'axios';
+import Swal from 'sweetalert2';
+import { Base64 } from 'js-base64';
 
-function resetPassword(token, password) {
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
+import '../css/fontastic.css';
+import '../css/poppins.css';
+import '../css/general.css';
+import '../css/theme.css';
+import '../css/landing.css';
+
+let apiUrlPrefix = 'http://localhost:8080/trpgfate-api';
+
+Axios.defaults.baseURL = apiUrlPrefix;
+Axios.defaults.withCredentials = true;
+Axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+function resetPassword(pid, token, password) {
     return new Promise((resolve, reject) => {
-        axios.put('/auth/password-reset', {
+        Axios.put('/auth/password-reset', {
+            pid: pid,
             token: token,
             passwd: password
         })
-        .then(() => {
-            resolve();
-        })
-        .catch(err => {
-            if (err.response) {
-                reject(err.response.data.message);
-            } else {
-                reject(err.message);
-            }
-        });
+            .then(() => {
+                resolve();
+            })
+            .catch(err => {
+                if (err.response) {
+                    reject(err.response.data.message);
+                } else {
+                    reject(err.message);
+                }
+            });
     });
 }
 
-$('#reset-password').click(() => {
-    if ($('.form-validate').valid()) {
-        $('#reset-password').attr('disabled', 'disabled').find('#spinner').show();
-        let url = new URL(window.location.href);
-        let token = url.searchParams.get('token');
-        resetPassword(token, $('#password').val())
-        .then(() => {
-            let timerInterval;
-            swal.fire({
-                title: '重置成功',
-                html: '在<span></span>秒后跳转到登录页面',
-                type: 'success',
-                timer: 3000,
-                onBeforeOpen: () => {
-                    timerInterval = setInterval(() => {
-                        swal.getContent().querySelector('span')
-                        .textContent = (swal.getTimerLeft() / 1000).toFixed(0)
-                    }, 100);
-                },
-                onClose: () => {
-                    clearInterval(timerInterval);
-                }
-            })
-            .then(() => {
-                $(window).attr('location','login.html');
-            });
-        })
-        .catch(reason => {
-            $('#reset-password').removeAttr('disabled').find('#spinner').hide();
-            swal.fire({
-                title: '错误',
-                text: reason,
-                type: 'error'
-            });
-        });
-    }
+$(document).ready(() => {
+
+    // ------------------------------------------------------- //
+    // Universal Form Validation
+    // ------------------------------------------------------ //
+
+    $('.form-validate').validate({
+        errorElement: "div",
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        errorPlacement: function (error, element) {
+            // Add the `invalid-feedback` class to the error element
+            error.addClass('invalid-feedback');
+            error.insertAfter(element.siblings().last());
+        }
+    });
+
+    // ------------------------------------------------------- //
+    // Material Inputs
+    // ------------------------------------------------------ //
+
+    let materialInputs = $('input.input-material');
+
+    // activate labels for prefilled values
+    materialInputs.filter(function () { return $(this).val() !== ""; }).siblings('.label-material').addClass('active');
+
+    // move label on focus
+    materialInputs.focus(function () {
+        $(this).siblings('.label-material').addClass('active');
+    });
+
+    // remove/keep label on blur
+    materialInputs.blur(function () {
+        $(this).siblings('.label-material').removeClass('active');
+
+        if ($(this).val() !== '') {
+            $(this).siblings('.label-material').addClass('active');
+        } else {
+            $(this).siblings('.label-material').removeClass('active');
+        }
+    });
+
+    // ------------------------------------------------------- //
+    // External links to new window
+    // ------------------------------------------------------ //
+
+    $('.external').click(function (e) {
+        e.preventDefault();
+        window.open($(this).attr("href"));
+    });
+
+    // ------------------------------------------------------- //
+    // Reset-password Configuration
+    // ------------------------------------------------------ //
+
+    $('#reset_password').submit(event => {
+        event.preventDefault();
+        if ($('.form-validate').valid()) {
+            $('#reset_password-submit').attr('disabled', 'disabled').find('#spinner').show();
+            let url = new URL(window.location.href);
+            let pid = url.searchParams.get('pid');
+            let tokenBs64 = url.searchParams.get('token');
+            resetPassword(pid, Base64.decode(tokenBs64), $('#password').val())
+                .then(() => {
+                    let timerInterval;
+                    Swal.fire({
+                        title: '重置成功',
+                        html: '在<span></span>秒后跳转到登录页面',
+                        type: 'success',
+                        timer: 3000,
+                        onBeforeOpen: () => {
+                            timerInterval = setInterval(() => {
+                                Swal.getContent().querySelector('span')
+                                    .textContent = (Swal.getTimerLeft() / 1000).toFixed(0)
+                            }, 100);
+                        },
+                        onClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                    })
+                        .then(() => {
+                            $(window).attr('location', 'login.html');
+                        });
+                })
+                .catch(reason => {
+                    $('#reset_password-submit').removeAttr('disabled').find('#spinner').hide();
+                    Swal.fire({
+                        title: '错误',
+                        text: reason,
+                        type: 'error'
+                    });
+                });
+        }
+    });
 });

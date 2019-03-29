@@ -1,10 +1,10 @@
 import $ from 'jquery';
-import axios from 'axios';
-import swal from 'sweetalert2';
+import Axios from 'axios';
+import Swal from 'sweetalert2';
 
 function askForCaptcha() {
     return new Promise((resolve, reject) => {
-        axios.post('/captcha')
+        Axios.post('/captcha')
         .then((resp) => {
             resolve({token: resp.data.token, imageBase64: resp.data.imgBs64});
         })
@@ -20,7 +20,7 @@ function askForCaptcha() {
 
 function showCaptchaDialog(imageBase64) {
     return new Promise((resolve, reject) => {
-        swal.fire({
+        Swal.fire({
             title: '请输入验证码',
             input: 'text',
             type: 'info',
@@ -30,7 +30,7 @@ function showCaptchaDialog(imageBase64) {
             html: $('<div>')
                 .append($('<img src="data:image/png;base64,' + imageBase64 + '" />'))
                 .append($('<button type="button" class="btn btn-secondary">换一张</button>').click(() => {
-                    swal.close();
+                    Swal.close();
                     reject('changeCaptcha');
                 }))
                 .get(0),
@@ -69,7 +69,7 @@ export default function requireCaptchaVerification() {
             });
         })
         .catch(err => {
-            swal.fire({
+            Swal.fire({
                 title: "获取验证码时发生未知错误",
                 text: err,
                 type: "error"

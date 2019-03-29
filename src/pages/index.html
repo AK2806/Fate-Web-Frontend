@@ -3,20 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>《命运™》</title>
+    <title>《命运™》桌面角色扮演</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="all,follow">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
   </head>
   <body>
-    <div class="page login-page">
+    <div class="page landing-page">
       <div class="container d-flex align-items-center">
-        <div class="form-holder has-shadow">
+        <div class="content-holder has-shadow">
           <div class="row">
-            <!-- Logo Panel -->
-            <div class="info d-flex align-items-center">
-              <div class="logo">
-                <img src="../img/logo.png" width="333" height="158" />
+            <div class="col-lg-6">
+              <div class="info d-flex align-items-center">
+                <div class="m-auto">
+                  <div class="row m-2">
+                    <img src="<%= require('../img/logo.png') %>" class="logo col-lg" />
+                  </div>
+                  <div id='logged-out' class="row m-2">
+                    <div class="p-2 col-lg">
+                      <a href="auth.html" role="button" class="btn btn-primary btn-lg w-100">登陆</a>
+                    </div>
+                    <div class="p-2 col-lg">
+                      <a href="auth.html?method=register" role="button" class="btn btn-secondary btn-lg w-100">注册</a>
+                    </div>
+                  </div>
+                  <div id="logged-in" class="row m-2" style="display: none;">
+                    <div class="p-2 col-lg">
+                      <a href="home.html" role="button" class="btn btn-primary btn-lg w-100">个人中心</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 bg-white">
+              <div class="form d-flex align-items-center">
+                <div class="content">
+                  <img src="<%= require('../img/download-address.png') %>" class="m-auto d-block" />
+                </div>
               </div>
             </div>
           </div>
