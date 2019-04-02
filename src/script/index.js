@@ -11,7 +11,7 @@ import '../css/general.css';
 import '../css/theme.css';
 import '../css/landing.css';
 
-let apiUrlPrefix = 'http://localhost:8080/trpgfate-api';
+let apiUrlPrefix = 'http://localhost:8080/';
 
 Axios.defaults.baseURL = apiUrlPrefix;
 Axios.defaults.withCredentials = true;
@@ -23,4 +23,4 @@ Axios.get('/auth/authentication')
     $('#logged-out').hide();
     $('#logged-in').show();
 })
-.catch(ignore => { });
+.catch(() => {});

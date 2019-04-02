@@ -23,15 +23,23 @@
           <div class="navbar-holder d-flex align-items-center justify-content-between">
             <!-- Navbar Header-->
             <div class="navbar-header">
-              <!-- Navbar Brand --><a href="home.html" class="navbar-brand d-none d-sm-inline-block">
+              <!-- Navbar Brand -->
+              <a href="console.html" class="navbar-brand d-none d-sm-inline-block">
                 <div class="brand-text d-none d-lg-inline-block"><strong>《命运™》桌面角色扮演</strong></div>
                 <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>《命运™》</strong></div>
               </a>
               <!-- Toggle Button-->
-              <a id="toggle-btn" href="javascript:void(0)" class="menu-btn active"><span></span><span></span><span></span></a>
+              <a id="toggle-btn" href="javascript:void(0)"
+                class="menu-btn active"><span></span><span></span><span></span></a>
             </div>
             <!-- Navbar Menu -->
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+              <!-- Avatar -->
+              <li class="nav-item">
+                <router-link class="nav-link" :to="'/' + selfId">
+                  <avatar :uuid="selfAccountInfo.avatarId" width="45" height="45"></avatar>
+                </router-link>
+              </li>
               <!-- Notifications-->
               <li class="nav-item dropdown"> <a id="notifications" rel="nofollow" data-target="#" href="#"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i
@@ -106,44 +114,7 @@
         </div>
       </nav>
     </header>
-    <div class="page-content d-flex align-items-stretch">
-        <side-bar name="AK2806" role="调查员" :avatar-uuid="accountInfo.avatarId" :menu-list="sideBarMenu" :init-selected-id="sideBarMenuSelectionInitId" @select-item="changePageTitle($event)"></side-bar>
-        <!--
-      <nav class="side-navbar">
-        <div class="sidebar-header d-flex align-items-center">
-          <avatar :uuid="accountInfo.avatarId" width="55" height="55"></avatar>
-          <div class="title">
-            <h1 class="h4">Mark Stephen</h1>
-            <p>调查员</p>
-          </div>
-        </div>
-        <side-bar-menu :list="sideBarMenu" :init-selected-id="sideBarMenuSelectionInitId" @select-item="changePageTitle($event)"></side-bar-menu>
-      </nav>
-    -->
-      <div class="content-inner">
-        <!-- Page Header-->
-        <header class="page-header">
-          <div class="container-fluid">
-            <h2 class="no-margin-bottom">{{ pageTitle }}</h2>
-          </div>
-        </header>
-
-        <!-- Page Footer-->
-        <footer class="main-footer">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-6">
-                <p>《命运™》桌面角色扮演</p>
-              </div>
-              <div class="col-sm-6 text-right">
-                <p>上海璀璨星屑网络科技工作室 &copy; 2019-2020 <a href="https://www.ccxxgames.com"
-                    target="_blank">https://www.ccxxgames.com</a></p>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </div>
+    <router-view @account-info-changed="function(userId) { if (userId == selfId) updateSelfAccoutInfo(); }"></router-view>    
   </div>
 </body>
 

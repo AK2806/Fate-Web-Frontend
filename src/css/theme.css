@@ -117,12 +117,6 @@
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
 }
 
-.btn:focus, .btn.focus {
-    outline: 0;
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(43, 144, 217, 0.25);
-    box-shadow: 0 0 0 0.2rem rgba(43, 144, 217, 0.25);
-}
-
 .btn.disabled, .btn:disabled {
     opacity: .65;
 }

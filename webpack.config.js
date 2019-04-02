@@ -15,7 +15,7 @@ let htmlPlugins = [];
 
 pages.forEach(page => {
     let chunkName = Path.basename(page.outputFile, '.html');
-    entries[chunkName] = Path.resolve(__dirname, 'src/js', page.jsFile);
+    entries[chunkName] = Path.resolve(__dirname, 'src/script', page.jsFile);
     htmlPlugins.push(new HtmlWebpackPlugin({
         chunks: [chunkName],
         filename: page.outputFile,

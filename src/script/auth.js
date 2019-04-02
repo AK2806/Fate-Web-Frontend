@@ -13,7 +13,7 @@ import '../css/general.css';
 import '../css/theme.css';
 import '../css/landing.css';
 
-let apiUrlPrefix = 'http://localhost:8080/trpgfate-api';
+let apiUrlPrefix = 'http://localhost:8080/';
 
 Axios.defaults.baseURL = apiUrlPrefix;
 Axios.defaults.withCredentials = true;
@@ -106,15 +106,17 @@ $(document).ready(() => {
     // Universal Form Validation
     // ------------------------------------------------------ //
 
-    $('.form-validate').validate({
-        errorElement: "div",
-        errorClass: 'is-invalid',
-        validClass: 'is-valid',
-        errorPlacement: function (error, element) {
-            // Add the `invalid-feedback` class to the error element
-            error.addClass('invalid-feedback');
-            error.insertAfter(element.siblings().last());
-        }
+    $('.form-validate').each(function() {
+        $(this).validate({
+            errorElement: "div",
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorPlacement: function (error, element) {
+                // Add the `invalid-feedback` class to the error element
+                error.addClass('invalid-feedback');
+                error.insertAfter(element.siblings().last());
+            }
+        });
     });
 
     // ------------------------------------------------------- //
@@ -166,9 +168,9 @@ $(document).ready(() => {
     // Login Configuration
     // ------------------------------------------------------ //
 
-    $('#login').submit(event => {
+    $('#login-form').submit(function(event) {
         event.preventDefault();
-        if ($('.form-validate').valid()) {
+        if ($(this).valid()) {
             $('#login-submit').attr('disabled', 'disabled').find('#spinner').show();
             let email = $('#login-email').val();
             let password = $('#login-password').val();
@@ -176,7 +178,7 @@ $(document).ready(() => {
                 .then(captchaInfo => {
                     login(email, password, captchaInfo.token, captchaInfo.text)
                         .then(() => {
-                            window.location.href = "home.html";
+                            window.location.href = "console.html";
                         })
                         .catch(reason => {
                             $('#login-submit').removeAttr('disabled').find('#spinner').hide();
@@ -294,9 +296,9 @@ $(document).ready(() => {
         }
     });
 
-    $('#register').submit(event => {
+    $('#register-form').submit(function(event) {
         event.preventDefault();
-        if ($('.form-validate').valid()) {
+        if ($(this).valid()) {
             $('#register-submit').attr('disabled', 'disabled').find('#spinner').show();
             let email = $('#register-email').val();
             let password = $('#register-password').val();
@@ -321,7 +323,7 @@ $(document).ready(() => {
                         }
                     })
                         .then(() => {
-                            window.location.href = "home.html";
+                            window.location.href = "console.html";
                         });
                 })
                 .catch(reason => {
@@ -351,6 +353,6 @@ $(document).ready(() => {
 Axios.get('/auth/authentication')
     .then(resp => {
         global.appUserId = resp.data.userId;
-        window.location.href = 'home.html';
+        window.location.href = 'console.html';
     })
-    .catch(ignore => { });
+    .catch(() => {});

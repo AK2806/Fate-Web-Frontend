@@ -18,7 +18,7 @@
         "contents": { }
     },
     {
-        "outputFile": "home.html",
+        "outputFile": "console.html",
         "jsFile": "console.js",
         "templateFile": "console.html",
         "contents": { }
