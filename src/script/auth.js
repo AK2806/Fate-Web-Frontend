@@ -1,3 +1,4 @@
+import './global';
 import $ from 'jquery';
 import 'jquery-validation';
 import 'bootstrap';
@@ -12,12 +13,6 @@ import '../css/poppins.css';
 import '../css/general.css';
 import '../css/theme.css';
 import '../css/landing.css';
-
-let apiUrlPrefix = 'http://localhost:8080/';
-
-Axios.defaults.baseURL = apiUrlPrefix;
-Axios.defaults.withCredentials = true;
-Axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 function login(email, password, captchaToken, captchaText) {
     return new Promise((resolve, reject) => {
@@ -111,6 +106,7 @@ $(document).ready(() => {
             errorElement: "div",
             errorClass: 'is-invalid',
             validClass: 'is-valid',
+            ignore: '.ignore',
             errorPlacement: function (error, element) {
                 // Add the `invalid-feedback` class to the error element
                 error.addClass('invalid-feedback');

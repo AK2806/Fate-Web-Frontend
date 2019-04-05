@@ -5,8 +5,9 @@
 </template>
 
 <script>
+import '../global';
 import urljoin from 'url-join';
-let apiUrlPrefix = 'http://localhost:8080/';
+
 export default {
     props: {
         uuid: {

@@ -1,5 +1,4 @@
 const Path = require('path');
-const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -14,13 +13,13 @@ let entries = {};
 let htmlPlugins = [];
 
 pages.forEach(page => {
-    let chunkName = Path.basename(page.outputFile, '.html');
+    let chunkName = Path.basename(page.htmlFile, '.html');
     entries[chunkName] = Path.resolve(__dirname, 'src/script', page.jsFile);
     htmlPlugins.push(new HtmlWebpackPlugin({
         chunks: [chunkName],
-        filename: page.outputFile,
+        filename: page.htmlFile,
         favicon: Path.resolve(__dirname, 'src/img/favicon.ico'),
-        template: Path.resolve(__dirname, 'src/pages', page.templateFile),
+        template: Path.resolve(__dirname, 'src/pages', page.htmlFile),
         contents: page.contents
     }));
 });

@@ -34,9 +34,19 @@
             </div>
             <!-- Navbar Menu -->
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+              <li class="nav-item">
+                  <router-link class="nav-link" to="/mods-market">
+                    <i class="fa fa-cube" aria-hidden="true"></i>模组市场
+                  </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link class="nav-link" to="/assets-store">
+                      <i class="fa fa-flask" aria-hidden="true"></i>素材商店
+                    </router-link>
+                  </li>
               <!-- Avatar -->
               <li class="nav-item">
-                <router-link class="nav-link" :to="'/' + selfId">
+                <router-link class="nav-link" :to="'/' + selfId + '/'">
                   <avatar :uuid="selfAccountInfo.avatarId" width="45" height="45"></avatar>
                 </router-link>
               </li>

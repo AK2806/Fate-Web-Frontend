@@ -1,23 +1,20 @@
+import './global';
 import $ from 'jquery';
-import Popper from 'popper.js';
-import Chart from 'chart.js';
 import Axios from 'axios';
 import Vue from 'vue';
 import Swal from 'sweetalert2';
-import urljoin from 'url-join';
-import ShowCaptcha from './components/captcha-inputer';
 import 'bootstrap';
 import 'jquery.cookie';
 import 'jquery-validation';
-import uuid from 'uuid/v1';
 import avatar from './components/avatar.vue';
-import Cropper from 'cropperjs';
-import 'cropperjs/dist/cropper.css';
 import VueRouter from 'vue-router';
 
-import pageHome from './console/home.vue';
+import pageCharacter from './console/character.vue';
 import pageAccountInfo from './console/account-info.vue';
 import pageAccountSafety from './console/account-safety.vue';
+
+import pageModsMarket from './mods-market.vue';
+import pageAssetsStore from './assets-store.vue';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
@@ -26,12 +23,6 @@ import '../css/poppins.css';
 import '../css/general.css';
 import '../css/theme.css';
 import '../css/console.css';
-
-let apiUrlPrefix = 'http://localhost:8080/';
-
-Axios.defaults.baseURL = apiUrlPrefix;
-Axios.defaults.withCredentials = true;
-Axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 Vue.use(VueRouter);
 
@@ -95,7 +86,12 @@ function jqueryInit() {
             errorElement: "div",
             errorClass: 'is-invalid text-red',
             validClass: 'is-valid',
-            ignore: '.ignore'
+            ignore: '.ignore',
+            errorPlacement: function (error, element) {
+                // Add the `invalid-feedback` class to the error element
+                error.addClass('invalid-feedback');
+                error.insertAfter(element.siblings().last());
+            }
         });
     });
 
@@ -168,33 +164,11 @@ function jqueryInit() {
     });
 };
 
-/*
-{
-    type: 'item',
-    id: 'mods-market',
-    html: '<i class="fa fa-cube" aria-hidden="true"></i>模组市场'
-},
-{
-    type: 'item',
-    id: 'assets-store',
-    html: '<i class="fa fa-flask" aria-hidden="true"></i>素材商店'
-}
-*/
-
-let vueData = {
+const vueData = {
     selfId: -1,
     selfAccountInfo: {
         name: '',
         avatarId: ''
-    },
-    page: {
-        newCharacter: {
-            portrait: {
-                file: null,
-                path: '',
-            },
-            name: ''
-        }
     }
 };
 
@@ -216,11 +190,6 @@ const viewer = {
                         items: [
                             {
                                 type: 'item',
-                                id: 'home',
-                                html: '<i class="fa fa-home" aria-hidden="true"></i>主页'
-                            },
-                            {
-                                type: 'item',
                                 id: 'character',
                                 html: '<i class="fa fa-user-secret" aria-hidden="true"></i>角色卡'
                             },
@@ -237,7 +206,7 @@ const viewer = {
                             {
                                 type: 'item',
                                 id: 'follower',
-                                html: '<i class="fa fa-users" aria-hidden="true"></i>我的圈子'
+                                html: '<i class="fa fa-users" aria-hidden="true"></i>圈子'
                             },
                             {
                                 type: 'dropdown',
@@ -264,7 +233,7 @@ const viewer = {
     },
     watch: {
         userId: function(newId, oldId) {
-            Axios.get('/persona/account-info/' + newId)
+            Axios.get('/userdata/account-info/' + newId)
             .then(resp => {
                 this.userName = resp.data.name;
                 this.avatarId = resp.data.avatarId;
@@ -281,7 +250,7 @@ const viewer = {
     methods: {
         log: console.log,
         updateAccountInfo() {
-            Axios.get('/persona/account-info/' + this.userId)
+            Axios.get('/userdata/account-info/' + this.userId)
             .then(resp => {
                 this.userName = resp.data.name;
                 this.avatarId = resp.data.avatarId;
@@ -309,22 +278,22 @@ const viewer = {
                 </div>
                 </div>
                 <div v-for="group in menu.groups">
-                <span class="heading text-primary">{{ group.heading }}</span>
-                <ul class="list-unstyled">
-                    <div v-for="(item, index) in group.items">
-                    <li :class="{ active: $route.path == '/' + userId + '/' + item.id }" v-if="item.type === 'item'">
-                        <router-link :to="'/' + userId + '/' + item.id" v-html="item.html"></router-link>
-                    </li>
-                    <li v-else-if="item.type === 'dropdown'">
-                        <a :href="'#dropdown-' + index" aria-expanded="false" data-toggle="collapse" v-html="item.html"></a>
-                        <ul :id="'dropdown-' + index" class="collapse list-unstyled">
-                        <li :class="{ active: $route.path == '/' + userId + '/' + dropdownItem.id }" v-for="dropdownItem in item.items">
-                            <router-link :to="'/' + userId + '/' + dropdownItem.id" v-html="dropdownItem.html"></router-link>
+                    <span class="heading text-primary">{{ group.heading }}</span>
+                    <ul class="list-unstyled">
+                        <div v-for="(item, index) in group.items">
+                        <li :class="{ active: $route.path == '/' + userId + '/' + item.id }" v-if="item.type === 'item'">
+                            <router-link :to="'/' + userId + '/' + item.id" v-html="item.html"></router-link>
                         </li>
-                        </ul>
-                    </li>
-                    </div>
-                </ul>
+                        <li v-else-if="item.type === 'dropdown'">
+                            <a :href="'#dropdown-' + index" aria-expanded="false" data-toggle="collapse" v-html="item.html"></a>
+                            <ul :id="'dropdown-' + index" class="collapse list-unstyled">
+                            <li :class="{ active: $route.path == '/' + userId + '/' + dropdownItem.id }" v-for="dropdownItem in item.items">
+                                <router-link :to="'/' + userId + '/' + dropdownItem.id" v-html="dropdownItem.html"></router-link>
+                            </li>
+                            </ul>
+                        </li>
+                        </div>
+                    </ul>
                 </div>
             </nav>
             <div class="content-inner">
@@ -355,7 +324,9 @@ Axios.get('/auth/authentication')
         new Vue({
             router: new VueRouter({
                 routes: [
-                    { path: '/', redirect: '/' + vueData.selfId },
+                    { path: '/', redirect: '/' + vueData.selfId + '/' },
+                    { path: '/mods-market', component: pageModsMarket },
+                    { path: '/assets-store', component: pageAssetsStore },
                     {
                         path: '/:userId',
                         component: viewer,
@@ -366,8 +337,13 @@ Axios.get('/auth/authentication')
                         },
                         children: [
                             {
-                                path: 'home',
-                                component: pageHome
+                                path: 'character',
+                                component: pageCharacter,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
                             },
                             {
                                 path: 'account-info',
@@ -389,7 +365,12 @@ Axios.get('/auth/authentication')
                             },
                             {
                                 path: '*',
-                                component: pageHome
+                                component: pageCharacter,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
                             }
                         ]
                     }
@@ -404,17 +385,8 @@ Axios.get('/auth/authentication')
             methods: {
                 log: console.log,
                 $: $,
-                pageAccountSafetySubmitData,
-                pageNewCharacterChangePortrait(file) {
-                    this.page.newCharacter.portrait.file = file;
-                    let fileReader = new FileReader();
-                    fileReader.readAsDataURL(file);
-                    fileReader.onload = e => {
-                        this.page.newCharacter.portrait.path = e.target.result;
-                    }
-                },
                 updateSelfAccoutInfo() {
-                    Axios.get('/persona/account-info/' + this.selfId)
+                    Axios.get('/userdata/account-info/' + this.selfId)
                         .then(resp => {
                             this.selfAccountInfo.name = resp.data.name;
                             this.selfAccountInfo.avatarId = resp.data.avatarId;
@@ -429,48 +401,6 @@ Axios.get('/auth/authentication')
                 }
             },
             components: {
-                'image-cropper': {
-                    props: {
-                        imgSrc: {
-                            required: true
-                        },
-                        width: {
-                            default: 600
-                        },
-                        height: {
-                            default: 600
-                        }
-                    },
-                    data: function () {
-                        return {
-                            cropper: null
-                        };
-                    },
-                    mounted: function () {
-                        this.cropper = new Cropper(this.$refs.cropping, {
-                            aspectRatio: 16 / 9,
-                            crop(event) {
-                                console.log(event.detail.x);
-                                console.log(event.detail.y);
-                                console.log(event.detail.width);
-                                console.log(event.detail.height);
-                                console.log(event.detail.rotate);
-                                console.log(event.detail.scaleX);
-                                console.log(event.detail.scaleY);
-                            },
-                        });
-                    },
-                    watch: {
-                        imgSrc: function (newSrc, oldSrc) {
-                            this.cropper.replace(newSrc);
-                        },
-                    },
-                    template: `
-                        <div :style="{ width: width, height: height }">
-                            <img style="max-width: 100%;" ref="cropping" />
-                        </div>
-                    `
-                },
                 'avatar': avatar
             }
         });

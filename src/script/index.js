@@ -1,3 +1,4 @@
+import './global';
 import $ from 'jquery';
 import 'jquery-validation';
 import 'bootstrap';
@@ -10,12 +11,6 @@ import '../css/poppins.css';
 import '../css/general.css';
 import '../css/theme.css';
 import '../css/landing.css';
-
-let apiUrlPrefix = 'http://localhost:8080/';
-
-Axios.defaults.baseURL = apiUrlPrefix;
-Axios.defaults.withCredentials = true;
-Axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 Axios.get('/auth/authentication')
 .then(resp => {

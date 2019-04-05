@@ -1,26 +1,22 @@
 [
     {
-        "outputFile": "index.html",
         "jsFile": "index.js",
-        "templateFile": "index.html",
+        "htmlFile": "index.html",
         "contents": { }
     },
     {
-        "outputFile": "auth.html",
         "jsFile": "auth.js",
-        "templateFile": "auth.html",
+        "htmlFile": "auth.html",
         "contents": { }
     },
     {
-        "outputFile": "reset-password.html",
         "jsFile": "reset-password.js",
-        "templateFile": "reset-password.html",
+        "htmlFile": "reset-password.html",
         "contents": { }
     },
     {
-        "outputFile": "console.html",
         "jsFile": "console.js",
-        "templateFile": "console.html",
+        "htmlFile": "console.html",
         "contents": { }
     }
 ]

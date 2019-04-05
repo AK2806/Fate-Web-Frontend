@@ -10,7 +10,7 @@
         <section id="account-info">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-lg-12 form-container">
+              <div class="col-lg-6 form-container">
                 <!-- Form Elements -->
                 <form id='account-info-form' class="form-validate"
                   @submit="function(e) { e.preventDefault(); if($('#account-info-form').valid()) submitData(); }">
@@ -35,8 +35,8 @@
                     </div>
                     <div class="card-body">
                       <div class="row align-items-center">
-                        <span class="col-sm-2">头像</span>
-                        <div class="col-sm-10">
+                        <span class="col-lg-2">头像</span>
+                        <div class="col-lg-10">
                           <avatar :uuid="avatarId"></avatar>
                           <button type="button" class="btn btn-link" v-show="editable"
                             @click="showAvatarUploader = !showAvatarUploader;">修改</button>
@@ -49,61 +49,61 @@
                       <div class="line"></div>
                       <div v-show="!editMode">
                         <div class="row align-items-center my-4">
-                          <span class="col-sm-2">昵称</span>
-                          <span class="col-sm-10">{{ model.name }}</span>
+                          <span class="col-lg-2">昵称</span>
+                          <span class="col-lg-10">{{ model.name }}</span>
                         </div>
                         <div class="row align-items-center my-4">
-                          <span class="col-sm-2">性别</span>
-                          <span class="col-sm-10" v-show="model.gender == 0">
+                          <span class="col-lg-2">性别</span>
+                          <span class="col-lg-10" v-show="model.gender == 0">
                             <i class="fa fa-mars" aria-hidden="true"></i>
                           </span>
-                          <span class="col-sm-10" v-show="model.gender == 1">
+                          <span class="col-lg-10" v-show="model.gender == 1">
                             <i class="fa fa-venus" aria-hidden="true"></i>
                           </span>
-                          <span class="col-sm-10" v-show="model.gender == 2">
+                          <span class="col-lg-10" v-show="model.gender == 2">
                             <i class="fa fa-venus-mars" aria-hidden="true"></i>
                           </span>
                         </div>
                         <div class="row align-items-center my-4">
-                          <span class="col-sm-2">生日</span>
-                          <span class="col-sm-10">{{ model.birthday.toLocaleDateString() }}</span>
+                          <span class="col-lg-2">生日</span>
+                          <span class="col-lg-10">{{ model.birthday.toLocaleDateString() }}</span>
                         </div>
                         <div class="row align-items-center my-4">
-                          <span class="col-sm-2">所在地</span>
-                          <span class="col-sm-10">{{ model.residence }}</span>
+                          <span class="col-lg-2">所在地</span>
+                          <span class="col-lg-10">{{ model.residence }}</span>
                         </div>
                         <div class="row align-items-center my-4">
-                          <span class="col-sm-2">资料可见度</span>
-                          <span class="col-sm-10" v-show="model.privacy == 0">仅自己可见</span>
-                          <span class="col-sm-10" v-show="model.privacy == 1">互粉可见</span>
-                          <span class="col-sm-10" v-show="model.privacy == 2">公开</span>
+                          <span class="col-lg-2">资料可见度</span>
+                          <span class="col-lg-10" v-show="model.privacy == 0">仅自己可见</span>
+                          <span class="col-lg-10" v-show="model.privacy == 1">互粉可见</span>
+                          <span class="col-lg-10" v-show="model.privacy == 2">公开</span>
                         </div>
                       </div>
                       <div v-show="editMode">
                         <div class="form-group row align-items-center">
-                          <label class="col-sm-2 form-control-label">昵称</label>
-                          <div class="col-sm-10">
+                          <label class="col-lg-2 form-control-label">昵称</label>
+                          <div class="col-lg-10">
                             <input type="text" class="form-control" required maxlength="50"
                               v-model="editModel.name" name="name" />
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label class="col-sm-2 form-control-label">性别</label>
-                          <div class="col-sm-1">
+                          <label class="col-lg-2 form-control-label">性别</label>
+                          <div class="col-lg-2">
                             <label for="account-info-gender-radios1">
                               <input id="account-info-gender-radios1" type="radio" required
                                 v-model="editModel.gender" value="0" name="gender">
                               <i class="fa fa-mars" aria-hidden="true"></i>
                             </label>
                           </div>
-                          <div class="col-sm-1">
+                          <div class="col-lg-2">
                             <label for="account-info-gender-radios2">
                               <input id="account-info-gender-radios2" type="radio" required
                                 v-model="editModel.gender" value="1" name="gender">
                               <i class="fa fa-venus" aria-hidden="true"></i>
                             </label>
                           </div>
-                          <div class="col-sm-1">
+                          <div class="col-lg-2">
                             <label for="account-info-gender-radios3">
                               <input id="account-info-gender-radios3" type="radio" required
                                 v-model="editModel.gender" value="2" name="gender">
@@ -112,23 +112,23 @@
                           </div>
                         </div>
                         <div class="form-group row align-items-center">
-                          <label class="col-sm-2 form-control-label">生日</label>
-                          <div class="col-sm-10">
+                          <label class="col-lg-2 form-control-label">生日</label>
+                          <div class="col-lg-10">
                             <datepicker v-model="editModel.birthday"
                               :language="datepicker.lang['zh']" name="birthday" :bootstrap-styling="true"
                               :disabled-dates="{ from: new Date() }"></datepicker>
                           </div>
                         </div>
                         <div class="form-group row align-items-center">
-                          <label class="col-sm-2 form-control-label">所在地</label>
-                          <div class="col-sm-10">
+                          <label class="col-lg-2 form-control-label">所在地</label>
+                          <div class="col-lg-10">
                             <input type="text" class="form-control" maxlength="100"
                               v-model="editModel.residence" name="residence" />
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label class="col-sm-2 form-control-label">资料可见度</label>
-                          <div class="col-sm-10">
+                          <label class="col-lg-2 form-control-label">资料可见度</label>
+                          <div class="col-lg-10">
                             <div>
                               <input id="account-info-privacy-radios1" type="radio" required
                                 v-model="editModel.privacy" value="0" name="privacy">
@@ -158,6 +158,7 @@
 </template>
 
 <script>
+import '../global';
 import $ from 'jquery';
 import 'jquery-validation';
 import Axios from 'axios';
@@ -168,11 +169,75 @@ import urljoin from 'url-join';
 import Swal from 'sweetalert2';
 import avatar from '../components/avatar.vue';
 
-let apiUrlPrefix = 'http://localhost:8080/';
+function jqueryInit() {
+    // ------------------------------------------------------- //
+    // Tooltips init
+    // ------------------------------------------------------ //    
 
-Axios.defaults.baseURL = apiUrlPrefix;
-Axios.defaults.withCredentials = true;
-Axios.defaults.headers.common['Content-Type'] = 'application/json';
+    $('[data-toggle="tooltip"]').tooltip();
+
+    // ------------------------------------------------------- //
+    // Adding fade effect to dropdowns
+    // ------------------------------------------------------ //
+    $('.dropdown').on('show.bs.dropdown', function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).fadeIn();
+    });
+    $('.dropdown').on('hide.bs.dropdown', function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).fadeOut();
+    });
+
+    // ------------------------------------------------------- //
+    // Universal Form Validation
+    // ------------------------------------------------------ //
+
+    $('.form-validate').each(function () {
+        $(this).validate({
+            errorElement: "div",
+            errorClass: 'is-invalid text-red',
+            validClass: 'is-valid',
+            ignore: '.ignore',
+            errorPlacement: function (error, element) {
+                // Add the `invalid-feedback` class to the error element
+                error.addClass('invalid-feedback');
+                error.insertAfter(element.siblings().last());
+            }
+        });
+    });
+
+    // ------------------------------------------------------- //
+    // Material Inputs
+    // ------------------------------------------------------ //
+
+    var materialInputs = $('input.input-material');
+
+    // activate labels for prefilled values
+    materialInputs.filter(function () { return $(this).val() !== ""; }).siblings('.label-material').addClass('active');
+
+    // move label on focus
+    materialInputs.on('focus', function () {
+        $(this).siblings('.label-material').addClass('active');
+    });
+
+    // remove/keep label on blur
+    materialInputs.on('blur', function () {
+        $(this).siblings('.label-material').removeClass('active');
+
+        if ($(this).val() !== '') {
+            $(this).siblings('.label-material').addClass('active');
+        } else {
+            $(this).siblings('.label-material').removeClass('active');
+        }
+    });
+
+    // ------------------------------------------------------- //
+    // External links to new window
+    // ------------------------------------------------------ //
+    $('.external').on('click', function (e) {
+
+        e.preventDefault();
+        window.open($(this).attr("href"));
+    });
+};
 
 export default {
   props: {
@@ -212,10 +277,11 @@ export default {
   },
   mounted() {
     this.fetchAccountInfo();
+    jqueryInit();
   },
   watch: {
     userId: function(newId, oldId) {
-      Axios.get('/persona/account-info/' + newId)
+      Axios.get('/userdata/account-info/' + newId)
       .then(resp => {
           this.avatarId = resp.data.avatarId;
           this.model.name = resp.data.name;
@@ -241,7 +307,7 @@ export default {
   methods: {
     $,
     fetchAccountInfo() {
-      Axios.get('/persona/account-info/' + this.userId)
+      Axios.get('/userdata/account-info/' + this.userId)
         .then(resp => {
             this.avatarId = resp.data.avatarId;
             this.model.name = resp.data.name;
@@ -266,7 +332,7 @@ export default {
       this.editModel.privacy = this.model.privacy;
     },
     submitData() {
-      Axios.patch('/persona/account-info/' + this.userId, this.editModel)
+      Axios.patch('/persona/account-info', this.editModel)
       .then(() => {
         this.fetchAccountInfo();
         this.$emit('account-info-changed');

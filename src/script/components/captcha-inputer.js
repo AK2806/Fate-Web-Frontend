@@ -1,3 +1,4 @@
+import '../global';
 import $ from 'jquery';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
