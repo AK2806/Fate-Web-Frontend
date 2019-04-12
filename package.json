@@ -45,6 +45,7 @@
     "jquery": "^3.3.1",
     "jquery-validation": "^1.19.0",
     "jquery.cookie": "^1.4.1",
+    "jqwidgets-scripts": "^7.1.0",
     "js-base64": "^2.5.1",
     "lodash": "^4.17.11",
     "popper.js": "^1.14.7",

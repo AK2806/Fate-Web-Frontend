@@ -1,5 +1,5 @@
 <template>
-    <div :style="{ width: width + 'px', height: height + 'px' }">
+    <div :style="{ width: width ? width + 'px' : undefined, height: height ? height + 'px' : undefined }">
         <img :src="avatarUrl" alt="头像" class="img-fluid rounded-circle">
     </div>
 </template>

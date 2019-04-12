@@ -10,7 +10,7 @@
         <section id="account-info">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-lg-6 form-container">
+              <div v-if="!denied" class="col-lg-6 form-container">
                 <!-- Form Elements -->
                 <form id='account-info-form' class="form-validate"
                   @submit="function(e) { e.preventDefault(); if($('#account-info-form').valid()) submitData(); }">
@@ -252,6 +252,7 @@ export default {
   },
   data: function() {
     return {
+      denied: false,
       editMode: false,
       showAvatarUploader: false,
       avatarUploadUrl: urljoin(apiUrlPrefix, '/persona/avatar'),
@@ -315,6 +316,7 @@ export default {
             this.model.birthday = new Date(resp.data.birthday);
             this.model.residence = resp.data.residence;
             this.model.privacy = resp.data.privacy;
+            this.denied = false;
         })
         .catch(err => {
             Swal.fire({
@@ -322,6 +324,7 @@ export default {
                 text: err.response ? err.response.data.message : err.message,
                 type: 'error'
             });
+            this.denied = true;
         });
     },
     overrideEditModel() {

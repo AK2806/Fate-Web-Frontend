@@ -1,27 +1,27 @@
 import './global';
 import $ from 'jquery';
+import 'jquery.cookie';
+import 'jquery-validation';
 import Axios from 'axios';
 import Vue from 'vue';
 import Swal from 'sweetalert2';
-import 'bootstrap';
-import 'jquery.cookie';
-import 'jquery-validation';
 import avatar from './components/avatar.vue';
 import VueRouter from 'vue-router';
 
+import pageGame from './console/game.vue';
 import pageCharacter from './console/character.vue';
+import pageMod from './console/mod.vue';
+import pageCommunity from './console/community.vue';
 import pageAccountInfo from './console/account-info.vue';
 import pageAccountSafety from './console/account-safety.vue';
 
 import pageModsMarket from './mods-market.vue';
 import pageAssetsStore from './assets-store.vue';
+import pageAnnouncement from './announcement.vue';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'font-awesome/css/font-awesome.css';
-import '../css/fontastic.css';
-import '../css/poppins.css';
-import '../css/general.css';
-import '../css/theme.css';
+import pageAnnouncementPosting from './console/announcement-posting.vue';
+import pageStatistics from './console/statistics.vue';
+
 import '../css/console.css';
 
 Vue.use(VueRouter);
@@ -164,16 +164,180 @@ function jqueryInit() {
     });
 };
 
-const vueData = {
-    selfId: -1,
-    selfAccountInfo: {
-        name: '',
-        avatarId: ''
-    }
+const viewOthersMenu = {
+    groups: [
+        {
+            heading: '主页',
+            items: [
+                {
+                    type: 'item',
+                    id: 'game',
+                    html: '<i class="fa fa-gamepad" aria-hidden="true"></i>ta的游戏桌'
+                }
+            ]
+        },
+        {
+            heading: '仓库',
+            items: [
+                {
+                    type: 'item',
+                    id: 'character',
+                    html: '<i class="fa fa-user-secret" aria-hidden="true"></i>ta的角色卡'
+                },
+                {
+                    type: 'item',
+                    id: 'mod',
+                    html: '<i class="fa fa-cube" aria-hidden="true"></i>ta的模组'
+                }
+            ]
+        },
+        {
+            heading: '社交',
+            items: [
+                {
+                    type: 'item',
+                    id: 'community',
+                    html: '<i class="fa fa-users" aria-hidden="true"></i>ta的圈子'
+                },
+                {
+                    type: 'item',
+                    id: 'account-info',
+                    html: '<i class="fa fa-user-circle-o" aria-hidden="true"></i>ta的账号资料'
+                }
+            ]
+        },
+    ]
+};
+
+const userMenu = {
+    groups: [
+        {
+            heading: '主页',
+            items: [
+                {
+                    type: 'item',
+                    id: 'game',
+                    html: '<i class="fa fa-gamepad" aria-hidden="true"></i>游戏桌'
+                }
+            ]
+        },
+        {
+            heading: '仓库',
+            items: [
+                {
+                    type: 'item',
+                    id: 'character',
+                    html: '<i class="fa fa-user-secret" aria-hidden="true"></i>角色卡'
+                },
+                {
+                    type: 'item',
+                    id: 'mod',
+                    html: '<i class="fa fa-cube" aria-hidden="true"></i>模组'
+                }
+            ]
+        },
+        {
+            heading: '社交',
+            items: [
+                {
+                    type: 'item',
+                    id: 'community',
+                    html: '<i class="fa fa-users" aria-hidden="true"></i>我的圈子'
+                },
+                {
+                    type: 'dropdown',
+                    html: '<i class="fa fa-user-circle-o" aria-hidden="true"></i>个人信息',
+                    items: [
+                        {
+                            id: 'account-info',
+                            html: '账号资料'
+                        },
+                        {
+                            id: 'account-safety',
+                            html: '账号安全'
+                        }
+                    ]
+                }
+            ]
+        },
+    ]
+};
+
+const adminMenu = {
+    groups: [
+        {
+            heading: '后台',
+            items: [
+                {
+                    type: 'item',
+                    id: 'statistics',
+                    html: '<i class="fa fa-bar-chart" aria-hidden="true"></i>数据统计'
+                },
+                {
+                    type: 'item',
+                    id: 'announcement-posting',
+                    html: '<i class="fa fa-bullhorn" aria-hidden="true"></i>发布公告'
+                }
+            ]
+        },
+        {
+            heading: '主页',
+            items: [
+                {
+                    type: 'item',
+                    id: 'game',
+                    html: '<i class="fa fa-gamepad" aria-hidden="true"></i>游戏桌'
+                }
+            ]
+        },
+        {
+            heading: '仓库',
+            items: [
+                {
+                    type: 'item',
+                    id: 'character',
+                    html: '<i class="fa fa-user-secret" aria-hidden="true"></i>角色卡'
+                },
+                {
+                    type: 'item',
+                    id: 'mod',
+                    html: '<i class="fa fa-cube" aria-hidden="true"></i>模组'
+                }
+            ]
+        },
+        {
+            heading: '社交',
+            items: [
+                {
+                    type: 'item',
+                    id: 'community',
+                    html: '<i class="fa fa-users" aria-hidden="true"></i>我的圈子'
+                },
+                {
+                    type: 'dropdown',
+                    html: '<i class="fa fa-user-circle-o" aria-hidden="true"></i>个人信息',
+                    items: [
+                        {
+                            id: 'account-info',
+                            html: '账号资料'
+                        },
+                        {
+                            id: 'account-safety',
+                            html: '账号安全'
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 };
 
 const viewer = {
     props: {
+        selfId: {
+            type: Number,
+            required: true
+        },
         userId: {
             type: Number,
             required: true
@@ -183,49 +347,9 @@ const viewer = {
         return {
             userName: '',
             avatarId: '',
-            menu: {
-                groups: [
-                    {
-                        heading: '仓库',
-                        items: [
-                            {
-                                type: 'item',
-                                id: 'character',
-                                html: '<i class="fa fa-user-secret" aria-hidden="true"></i>角色卡'
-                            },
-                            {
-                                type: 'item',
-                                id: 'mod',
-                                html: '<i class="fa fa-cubes" aria-hidden="true"></i>模组'
-                            }
-                        ]
-                    },
-                    {
-                        heading: '社交',
-                        items: [
-                            {
-                                type: 'item',
-                                id: 'follower',
-                                html: '<i class="fa fa-users" aria-hidden="true"></i>圈子'
-                            },
-                            {
-                                type: 'dropdown',
-                                html: '<i class="fa fa-user-circle-o" aria-hidden="true"></i>个人信息',
-                                items: [
-                                    {
-                                        id: 'account-info',
-                                        html: '账号资料'
-                                    },
-                                    {
-                                        id: 'account-safety',
-                                        html: '账号安全'
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                ]
-            },
+            role: 0,
+            followed: false,
+            menu: userMenu,
         };
     },
     mounted() {
@@ -233,10 +357,27 @@ const viewer = {
     },
     watch: {
         userId: function(newId, oldId) {
-            Axios.get('/userdata/account-info/' + newId)
+            Axios.get('/userdata/user/id/' + newId)
             .then(resp => {
                 this.userName = resp.data.name;
                 this.avatarId = resp.data.avatarId;
+                this.role = resp.data.role;
+                if (newId != this.selfId) {
+                    this.menu = viewOthersMenu;
+                } else {
+                    switch (this.role) {
+                        case 0:
+                            this.menu = userMenu;
+                            break;
+                        case 1:
+                        case 2:
+                            this.menu = adminMenu;
+                            break;
+                        default:
+                            this.menu = userMenu;
+                            break;
+                    }
+                }
             })
             .catch(err => {
                 Swal.fire({
@@ -245,15 +386,97 @@ const viewer = {
                     type: 'error'
                 });
             });
+            if (newId != this.selfId) {
+                Axios.get('/persona/followee/' + newId)
+                .then(() => {
+                    this.followed = true;
+                })
+                .catch(err => {
+                    if (err.response && err.response.status == 404) {
+                        this.followed = false;
+                      } else {
+                        Swal.fire({
+                            title: '错误',
+                            text: err.response ? err.response.data.message : err.message,
+                            type: 'error'
+                        });
+                      }
+                });
+            }
         }
     },
     methods: {
         log: console.log,
         updateAccountInfo() {
-            Axios.get('/userdata/account-info/' + this.userId)
+            Axios.get('/userdata/user/id/' + this.userId)
             .then(resp => {
                 this.userName = resp.data.name;
                 this.avatarId = resp.data.avatarId;
+                this.role = resp.data.role;
+                if (this.userId != this.selfId) {
+                    this.menu = viewOthersMenu;
+                } else {
+                    switch (this.role) {
+                        case 0:
+                            this.menu = userMenu;
+                            break;
+                        case 1:
+                        case 2:
+                            this.menu = adminMenu;
+                            break;
+                        default:
+                            this.menu = userMenu;
+                            break;
+                    }
+                }
+            })
+            .catch(err => {
+                Swal.fire({
+                    title: '错误',
+                    text: err.response ? err.response.data.message : err.message,
+                    type: 'error'
+                });
+            });
+            if (this.userId != this.selfId) {
+                Axios.get('/persona/followee/' + this.userId)
+                .then(() => {
+                    this.followed = true;
+                })
+                .catch(err => {
+                    if (err.response && err.response.status == 404) {
+                        this.followed = false;
+                      } else {
+                        Swal.fire({
+                            title: '错误',
+                            text: err.response ? err.response.data.message : err.message,
+                            type: 'error'
+                        });
+                      }
+                });
+            } else {
+                this.$emit('account-info-changed', this.userId);
+            }
+        },
+        toggleFollow() {
+            Axios.put('/persona/followee', {
+                userId: this.userId
+            })
+            .then(() => {
+                Axios.get('/persona/followee/' + this.userId)
+                .then(() => {
+                    this.followed = true;
+                })
+                .catch(err => {
+                    if (err.response && err.response.status == 404) {
+                        this.followed = false;
+                      } else {
+                        Swal.fire({
+                            title: '错误',
+                            text: err.response ? err.response.data.message : err.message,
+                            type: 'error'
+                        });
+                      }
+                });
             })
             .catch(err => {
                 Swal.fire({
@@ -264,18 +487,36 @@ const viewer = {
             });
         }
     },
+    computed: {
+        roleName() {
+            switch (this.role) {
+                case 0:
+                    return '调查员';
+                case 1:
+                    return '管理员';
+                case 2:
+                    return '超级管理员';
+                default:
+                    return '';
+            }
+        }
+    },
     components: {
-        'avatar': avatar
+        avatar
     },
     template: `
         <div class="page-content d-flex align-items-stretch">
             <nav class="side-navbar">
                 <div class="sidebar-header d-flex align-items-center">
-                <avatar :uuid="avatarId" width="55" height="55"></avatar>
-                <div class="title">
-                    <h1 class="h4">{{ userName }}</h1>
-                    <p>调查员</p>
+                    <avatar :uuid="avatarId" width="55" height="55"></avatar>
+                    <div class="title">
+                        <h1 class="h4">{{ userName }}</h1>
+                        <p>{{ roleName }}</p>
+                    </div>
                 </div>
+                <div v-if="this.userId != this.selfId" class="d-flex align-items-center justify-content-center">
+                    <button v-if="followed" class="btn btn-secondary follow-btn" @click="toggleFollow()">已关注</button>
+                    <button v-else class="btn btn-primary follow-btn" @click="toggleFollow()">关注</button>
                 </div>
                 <div v-for="group in menu.groups">
                     <span class="heading text-primary">{{ group.heading }}</span>
@@ -297,7 +538,7 @@ const viewer = {
                 </div>
             </nav>
             <div class="content-inner">
-                <router-view @account-info-changed="updateAccountInfo(); $emit('account-info-changed', userId);"></router-view>
+                <router-view @user-changed="$emit('user-changed', $event)" @account-info-changed="updateAccountInfo()"></router-view>
                 <!-- Page Footer -->
                 <footer class="main-footer">
                     <div class="container-fluid">
@@ -317,6 +558,13 @@ const viewer = {
     `
 };
 
+const vueData = {
+    selfId: -1,
+    selfName: '',
+    selfAvatarId: '',
+    selfRole: 0
+};
+
 Axios.get('/auth/authentication')
     .then(resp => {
         vueData.selfId = resp.data.userId;
@@ -324,21 +572,50 @@ Axios.get('/auth/authentication')
         new Vue({
             router: new VueRouter({
                 routes: [
-                    { path: '/', redirect: '/' + vueData.selfId + '/' },
+                    { path: '/', redirect: '/' + vueData.selfId + '/game' },
                     { path: '/mods-market', component: pageModsMarket },
                     { path: '/assets-store', component: pageAssetsStore },
+                    { path: '/announcement', component: pageAnnouncement },
                     {
                         path: '/:userId',
                         component: viewer,
                         props(route) {
                             let props = { };
+                            props.selfId = vueData.selfId;
                             props.userId = parseInt(route.params.userId);
                             return props;
                         },
                         children: [
                             {
+                                path: 'game',
+                                component: pageGame,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
+                            },
+                            {
                                 path: 'character',
                                 component: pageCharacter,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
+                            },
+                            {
+                                path: 'mod',
+                                component: pageMod,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
+                            },
+                            {
+                                path: 'community',
+                                component: pageCommunity,
                                 props(route) {
                                     let props = { };
                                     props.userId = parseInt(route.params.userId);
@@ -351,6 +628,10 @@ Axios.get('/auth/authentication')
                                 props(route) {
                                     let props = { };
                                     props.userId = parseInt(route.params.userId);
+                                    props.editable = false;
+                                    if (route.params.userId == vueData.selfId) {
+                                        props.editable = true;
+                                    }
                                     return props;
                                 }
                             },
@@ -364,8 +645,17 @@ Axios.get('/auth/authentication')
                                 }
                             },
                             {
-                                path: '*',
-                                component: pageCharacter,
+                                path: 'statistics',
+                                component: pageStatistics,
+                                props(route) {
+                                    let props = { };
+                                    props.userId = parseInt(route.params.userId);
+                                    return props;
+                                }
+                            },
+                            {
+                                path: 'announcement-posting',
+                                component: pageAnnouncementPosting,
                                 props(route) {
                                     let props = { };
                                     props.userId = parseInt(route.params.userId);
@@ -385,11 +675,15 @@ Axios.get('/auth/authentication')
             methods: {
                 log: console.log,
                 $: $,
+                changeViewUser(userId) {
+                    this.$router.push('/' + userId + '/game');
+                },
                 updateSelfAccoutInfo() {
-                    Axios.get('/userdata/account-info/' + this.selfId)
+                    Axios.get('/userdata/user/id/' + this.selfId)
                         .then(resp => {
-                            this.selfAccountInfo.name = resp.data.name;
-                            this.selfAccountInfo.avatarId = resp.data.avatarId;
+                            this.selfName = resp.data.name;
+                            this.selfAvatarId = resp.data.avatarId;
+                            this.selfRole = resp.data.role;
                         })
                         .catch(err => {
                             Swal.fire({
@@ -401,7 +695,7 @@ Axios.get('/auth/authentication')
                 }
             },
             components: {
-                'avatar': avatar
+                avatar
             }
         });
     })

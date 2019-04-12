@@ -36,7 +36,7 @@
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
               <li class="nav-item">
                   <router-link class="nav-link" to="/mods-market">
-                    <i class="fa fa-cube" aria-hidden="true"></i>模组市场
+                    <i class="fa fa-cubes" aria-hidden="true"></i>模组市场
                   </router-link>
                 </li>
                 <li class="nav-item">
@@ -46,8 +46,8 @@
                   </li>
               <!-- Avatar -->
               <li class="nav-item">
-                <router-link class="nav-link" :to="'/' + selfId + '/'">
-                  <avatar :uuid="selfAccountInfo.avatarId" width="45" height="45"></avatar>
+                <router-link class="nav-link" :to="'/' + selfId + '/game'">
+                  <avatar :uuid="selfAvatarId" width="45" height="45"></avatar>
                 </router-link>
               </li>
               <!-- Notifications-->
@@ -94,7 +94,7 @@
         </div>
       </nav>
     </header>
-    <router-view @account-info-changed="function(userId) { if (userId == selfId) updateSelfAccoutInfo(); }"></router-view>    
+    <router-view @user-changed="changeViewUser($event)" @account-info-changed="updateSelfAccoutInfo()"></router-view>    
   </div>
 </body>
 

@@ -1,17 +1,10 @@
 import './global';
 import $ from 'jquery';
 import 'jquery-validation';
-import 'bootstrap';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { Base64 } from 'js-base64';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'font-awesome/css/font-awesome.css';
-import '../css/fontastic.css';
-import '../css/poppins.css';
-import '../css/general.css';
-import '../css/theme.css';
 import '../css/landing.css';
 
 function resetPassword(pid, token, password) {

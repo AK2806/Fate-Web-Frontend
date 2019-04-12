@@ -1,5 +1,12 @@
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
+import '../css/fontastic.css';
+import '../css/poppins.css';
+import '../css/general.css';
+import '../css/theme.css';
 import Axios from 'axios';
-global.apiUrlPrefix = 'http://localhost:8080/trpgfate-api';
+global.apiUrlPrefix = 'http://localhost:8080/';
 Axios.defaults.baseURL = apiUrlPrefix;
 Axios.defaults.withCredentials = true;
 Axios.defaults.headers.common['Content-Type'] = 'application/json';

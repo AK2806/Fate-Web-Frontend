@@ -6,7 +6,7 @@
             </div>
         </header>
         <!-- Account Safety -->
-        <section id="account-safety">
+        <section v-if="!denied" id="account-safety">
             <div class="container-fluid">
                 <div class="row">
                 <div class="col-lg-6 form-container">
@@ -124,8 +124,15 @@ function jqueryInit() {
 };
 
 export default {
+    props: {
+        userId: {
+            type: Number,
+            required: true
+        }
+    },
     data() {
         return {
+            denied: false,
             confirmPassword: '',
             model: {
                 oldPasswd: '',
@@ -135,6 +142,15 @@ export default {
     },
     mounted() {
         jqueryInit();
+        Axios.get('/auth/authentication')
+        .then(resp => {
+            if (resp.data.userId != this.userId) {
+                this.denied = true;
+            }
+        })
+        .catch(() => {
+            this.denied = true;
+        });
     },
     methods: {
         $,
