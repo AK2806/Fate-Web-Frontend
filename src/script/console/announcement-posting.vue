@@ -20,7 +20,7 @@
                 </div>
                 <div class="row my-2">
                     <div class="col-lg-12">
-                        <jqx-editor ref="content" :height="height" :localization="localization" lineBreak="div">
+                        <jqx-editor theme="bootstrap" ref="content" :height="height" :localization="localization" lineBreak="div">
                             <div></div>
                         </jqx-editor>
                     </div>
@@ -46,6 +46,7 @@ import Axios from "axios";
 import Swal from "sweetalert2";
 import jqxEditor from "jqwidgets-scripts/jqwidgets-vue/vue_jqxeditor.vue";
 import "jqwidgets-scripts/jqwidgets/styles/jqx.base.css";
+import "jqwidgets-scripts/jqwidgets/styles/jqx.bootstrap.css";
 
 export default {
   data() {
@@ -82,6 +83,8 @@ export default {
             htmlContent: this.$refs['content'].val()
         })
         .then(() => {
+            this.title = '';
+            this.$refs['content'].val('<div></div>');
             Swal.fire({
                 title: '完成',
                 text: '公告已发布',

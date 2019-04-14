@@ -51,39 +51,24 @@
                 </router-link>
               </li>
               <!-- Notifications-->
-              <li class="nav-item dropdown"> <a id="notifications" rel="nofollow" data-target="#" href="#"
+              <li class="nav-item dropdown"><a id="notifications" rel="nofollow" data-target="#" href="#"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i
-                    class="fa fa-bell-o"></i><span class="badge bg-red badge-corner">12</span></a>
+                    class="fa fa-bell-o"></i><span class="badge bg-red badge-corner">{{ notificationCountText }}</span></a>
                 <ul aria-labelledby="notifications" class="dropdown-menu">
-                  <li><a rel="nofollow" href="#" class="dropdown-item">
+                  <li><router-link rel="nofollow" to="/announcement" class="dropdown-item">
                       <div class="notification">
-                        <div class="notification-content"><i class="fa fa-envelope bg-green"></i>You have 6 new messages
+                        <div class="notification-content"><i class="fa fa-bullhorn bg-orange" aria-hidden="true"></i>系统公告（点击查看全部）
                         </div>
-                        <div class="notification-time"><small>4 minutes ago</small></div>
+                        <div class="notification-time"><small v-html="urneadAnnouncementCountHtml"></small></div>
                       </div>
-                    </a></li>
-                  <li><a rel="nofollow" href="#" class="dropdown-item">
+                    </router-link></li>
+                  <li><router-link rel="nofollow" :to="'/' + selfId + '/community'" class="dropdown-item">
                       <div class="notification">
-                        <div class="notification-content"><i class="fa fa-twitter bg-blue"></i>You have 2 followers
+                        <div class="notification-content"><i class="fa fa-users bg-blue" aria-hidden="true"></i>我的粉丝（点击查看全部）
                         </div>
-                        <div class="notification-time"><small>4 minutes ago</small></div>
+                        <div class="notification-time"><small v-html="newFollowerCountHtml"></small></div>
                       </div>
-                    </a></li>
-                  <li><a rel="nofollow" href="#" class="dropdown-item">
-                      <div class="notification">
-                        <div class="notification-content"><i class="fa fa-upload bg-orange"></i>Server Rebooted</div>
-                        <div class="notification-time"><small>4 minutes ago</small></div>
-                      </div>
-                    </a></li>
-                  <li><a rel="nofollow" href="#" class="dropdown-item">
-                      <div class="notification">
-                        <div class="notification-content"><i class="fa fa-twitter bg-blue"></i>You have 2 followers
-                        </div>
-                        <div class="notification-time"><small>10 minutes ago</small></div>
-                      </div>
-                    </a></li>
-                  <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong>view all
-                        notifications </strong></a></li>
+                    </router-link></li>
                 </ul>
               </li>
               <!-- Logout -->
@@ -94,7 +79,7 @@
         </div>
       </nav>
     </header>
-    <router-view @user-changed="changeViewUser($event)" @account-info-changed="updateSelfAccoutInfo()"></router-view>    
+    <router-view @user-changed="changeViewUser($event)" @account-info-changed="updateSelfAccoutInfo()" @notification-updated="updateNotification()"></router-view>    
   </div>
 </body>
 

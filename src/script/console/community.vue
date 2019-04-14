@@ -142,6 +142,10 @@ import uuid from 'uuid/v1';
 
 export default {
     props: {
+        selfId: {
+            type: Number,
+            required: true
+        },
         userId: {
             type: Number,
             required: true
@@ -187,6 +191,9 @@ export default {
                 type: 'error'
             });
         })
+        if (this.userId == this.selfId) {
+            this.markFollowerRead();
+        }
     },
     watch: {
         followerPageIdx: function (newVal, oldVal) {
@@ -279,6 +286,15 @@ export default {
                     text: err.response ? err.response.data.message : err.message,
                     type: 'error'
                 });
+            });
+        },
+        markFollowerRead() {
+            Axios.put('/persona/notification/follower')
+            .then(() => {
+                this.$emit('notification-updated');
+            })
+            .catch(err => {
+                console.error(err);
             });
         }
     },

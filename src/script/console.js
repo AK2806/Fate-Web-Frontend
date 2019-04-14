@@ -562,7 +562,11 @@ const vueData = {
     selfId: -1,
     selfName: '',
     selfAvatarId: '',
-    selfRole: 0
+    selfRole: 0,
+    notificationCount: {
+        announcement: 0,
+        follower: 0
+    }
 };
 
 Axios.get('/auth/authentication')
@@ -618,6 +622,7 @@ Axios.get('/auth/authentication')
                                 component: pageCommunity,
                                 props(route) {
                                     let props = { };
+                                    props.selfId = vueData.selfId;
                                     props.userId = parseInt(route.params.userId);
                                     return props;
                                 }
@@ -671,6 +676,23 @@ Axios.get('/auth/authentication')
             mounted() {
                 jqueryInit();
                 this.updateSelfAccoutInfo();
+                this.updateNotification();
+            },
+            computed: {
+                notificationCountText() {
+                    let count = this.notificationCount.announcement + this.notificationCount.follower;
+                    return count > 0 ? (count < 100 ? `${count}` : '99+') : '';
+                },
+                newFollowerCountHtml() {
+                    return this.notificationCount.follower > 0 ?
+                        `你有<strong class="text-red">${this.notificationCount.follower}</strong>位新粉丝`
+                        : '没有新的粉丝';
+                },
+                urneadAnnouncementCountHtml() {
+                    return this.notificationCount.announcement > 0 ?
+                        `你有<strong class="text-red">${this.notificationCount.announcement}</strong>条未读公告`
+                        : '没有未读公告';
+                }
             },
             methods: {
                 log: console.log,
@@ -692,6 +714,22 @@ Axios.get('/auth/authentication')
                                 type: 'error'
                             });
                         });
+                },
+                updateNotification() {
+                    Axios.get('/persona/notification/announcement')
+                    .then(resp => {
+                        this.notificationCount.announcement = resp.data.count;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+                    Axios.get('/persona/notification/follower')
+                    .then(resp => {
+                        this.notificationCount.follower = resp.data.count;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
                 }
             },
             components: {
