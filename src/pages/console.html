@@ -46,8 +46,8 @@
                   </li>
               <!-- Avatar -->
               <li class="nav-item">
-                <router-link class="nav-link" :to="'/' + selfId + '/game'">
-                  <avatar :uuid="selfAvatarId" width="45" height="45"></avatar>
+                <router-link class="nav-link" :to="'/' + selfId">
+                  <avatar ref="avatar" :user-id="selfId" width="45" height="45"></avatar>
                 </router-link>
               </li>
               <!-- Notifications-->

@@ -37,11 +37,11 @@
                       <div class="row align-items-center">
                         <span class="col-lg-2">头像</span>
                         <div class="col-lg-10">
-                          <avatar :uuid="avatarId"></avatar>
+                          <avatar ref="avatar" :user-id="userId"></avatar>
                           <button type="button" class="btn btn-link" v-show="editable"
                             @click="showAvatarUploader = !showAvatarUploader;">修改</button>
                           <avatar-upload field="imageFile"
-                            @crop-upload-success="(jsonData, field) => { avatarId = jsonData.uuid; $emit('account-info-changed'); }"
+                            @crop-upload-success="(jsonData, field) => { $refs['avatar'].updateAvatar(); $emit('account-info-changed'); }"
                             v-model="showAvatarUploader" :width="128" :height="128"
                             :url="avatarUploadUrl" img-format="png" :with-credentials="true"></avatar-upload>
                         </div>
@@ -256,7 +256,6 @@ export default {
       editMode: false,
       showAvatarUploader: false,
       avatarUploadUrl: urljoin(apiUrlPrefix, '/persona/avatar'),
-      avatarId: '',
       model: {
         name: '',
         gender: 2,
@@ -284,7 +283,6 @@ export default {
     userId: function(newId, oldId) {
       Axios.get('/userdata/account-info/' + newId)
       .then(resp => {
-          this.avatarId = resp.data.avatarId;
           this.model.name = resp.data.name;
           this.model.gender = resp.data.gender;
           this.model.birthday = new Date(resp.data.birthday);
@@ -310,7 +308,6 @@ export default {
     fetchAccountInfo() {
       Axios.get('/userdata/account-info/' + this.userId)
         .then(resp => {
-            this.avatarId = resp.data.avatarId;
             this.model.name = resp.data.name;
             this.model.gender = resp.data.gender;
             this.model.birthday = new Date(resp.data.birthday);

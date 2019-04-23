@@ -346,7 +346,6 @@ const viewer = {
     data() {
         return {
             userName: '',
-            avatarId: '',
             role: 0,
             followed: false,
             menu: userMenu,
@@ -360,7 +359,6 @@ const viewer = {
             Axios.get('/userdata/user/id/' + newId)
             .then(resp => {
                 this.userName = resp.data.name;
-                this.avatarId = resp.data.avatarId;
                 this.role = resp.data.role;
                 if (newId != this.selfId) {
                     this.menu = viewOthersMenu;
@@ -408,10 +406,10 @@ const viewer = {
     methods: {
         log: console.log,
         updateAccountInfo() {
+            this.$refs['avatar'].updateAvatar();
             Axios.get('/userdata/user/id/' + this.userId)
             .then(resp => {
                 this.userName = resp.data.name;
-                this.avatarId = resp.data.avatarId;
                 this.role = resp.data.role;
                 if (this.userId != this.selfId) {
                     this.menu = viewOthersMenu;
@@ -508,7 +506,7 @@ const viewer = {
         <div class="page-content d-flex align-items-stretch">
             <nav class="side-navbar">
                 <div class="sidebar-header d-flex align-items-center">
-                    <avatar :uuid="avatarId" width="55" height="55"></avatar>
+                    <avatar ref="avatar" :user-id="userId" width="55" height="55"></avatar>
                     <div class="title">
                         <h1 class="h4">{{ userName }}</h1>
                         <p>{{ roleName }}</p>
@@ -561,7 +559,6 @@ const viewer = {
 const vueData = {
     selfId: -1,
     selfName: '',
-    selfAvatarId: '',
     selfRole: 0,
     notificationCount: {
         announcement: 0,
@@ -576,7 +573,7 @@ Axios.get('/auth/authentication')
         new Vue({
             router: new VueRouter({
                 routes: [
-                    { path: '/', redirect: '/' + vueData.selfId + '/game' },
+                    { path: '/', redirect: '/' + vueData.selfId },
                     { path: '/mods-market', component: pageModsMarket },
                     { path: '/assets-store', component: pageAssetsStore },
                     { path: '/announcement', component: pageAnnouncement },
@@ -595,6 +592,7 @@ Axios.get('/auth/authentication')
                                 component: pageGame,
                                 props(route) {
                                     let props = { };
+                                    props.selfId = vueData.selfId;
                                     props.userId = parseInt(route.params.userId);
                                     return props;
                                 }
@@ -604,6 +602,7 @@ Axios.get('/auth/authentication')
                                 component: pageCharacter,
                                 props(route) {
                                     let props = { };
+                                    props.selfId = vueData.selfId;
                                     props.userId = parseInt(route.params.userId);
                                     return props;
                                 }
@@ -698,13 +697,13 @@ Axios.get('/auth/authentication')
                 log: console.log,
                 $: $,
                 changeViewUser(userId) {
-                    this.$router.push('/' + userId + '/game');
+                    this.$router.push('/' + userId);
                 },
                 updateSelfAccoutInfo() {
+                    this.$refs['avatar'].updateAvatar();
                     Axios.get('/userdata/user/id/' + this.selfId)
                         .then(resp => {
                             this.selfName = resp.data.name;
-                            this.selfAvatarId = resp.data.avatarId;
                             this.selfRole = resp.data.role;
                         })
                         .catch(err => {

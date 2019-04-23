@@ -7,10 +7,11 @@
 <script>
 import '../global';
 import urljoin from 'url-join';
+import Axios from 'axios';
 
 export default {
     props: {
-        uuid: {
+        userId: {
             required: true
         }, 
         width: {
@@ -22,8 +23,28 @@ export default {
     },
     data: function () {
         return {
-            baseUrl: apiUrlPrefix
+            baseUrl: apiUrlPrefix,
+            uuid: ''
         };
+    },
+    mounted() {
+        this.updateAvatar();
+    },
+    methods: {
+        updateAvatar() {
+            Axios.get('/userdata/user/id/' + this.userId)
+                .then(resp => {
+                    this.uuid = resp.data.avatarId;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    watch: {
+        userId: function () {
+            this.updateAvatar();
+        }
     },
     computed: {
         avatarUrl: function () {

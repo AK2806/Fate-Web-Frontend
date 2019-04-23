@@ -25,10 +25,10 @@
                                     <h3 class="h4 px-3">关注</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row" style="padding: 20px;">
-                                        <div v-for="user in followee" :key="'followee-' + user.userId" style="padding: 10px;" class="col-lg-3 has-shadow">
-                                            <a href="javascript:void(0)" @click="$emit('user-changed', user.id);" style="display: block;" class="d-flex align-items-center">
-                                                <avatar :uuid="user.avatarId"></avatar>
+                                    <div class="row p-4">
+                                        <div v-for="user in followee" :key="'followee-' + user.id" class="col-lg-3 has-shadow p-2 m-2">
+                                            <a href="javascript:void(0)" @click="$emit('user-changed', user.id);" class="d-flex align-items-center">
+                                                <avatar :user-id="user.id"></avatar>
                                                 <div style="margin-left: 10px">
                                                     <span class="h4">{{ user.name }}</span>
                                                     <small class="text-secondary">{{ user.email }}</small>
@@ -66,10 +66,10 @@
                                     <h3 class="h4 px-3">粉丝</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row" style="padding: 20px;">
-                                        <div v-for="user in follower" :key="'follower-' + user.userId" style="padding: 10px;" class="col-lg-3 has-shadow">
-                                            <a href="javascript:void(0)" @click="$emit('user-changed', user.id);" style="display: block;" class="d-flex align-items-center">
-                                                <avatar :uuid="user.avatarId"></avatar>
+                                    <div class="row p-4">
+                                        <div v-for="user in follower" :key="'follower-' + user.id" class="col-lg-3 has-shadow p-2 m-2">
+                                            <a href="javascript:void(0)" @click="$emit('user-changed', user.id);" class="d-flex align-items-center">
+                                                <avatar :user-id="user.id"></avatar>
                                                 <div style="margin-left: 10px">
                                                     <span class="h4">{{ user.name }}</span>
                                                     <small class="text-secondary">{{ user.email }}</small>
@@ -110,9 +110,9 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row" style="padding: 20px;">
-                                        <div v-for="user in searchResult" :key="'user-' + user.userId" style="padding: 10px;" class="col-lg-3 has-shadow">
+                                        <div v-for="user in searchResult" :key="'user-' + user.id" style="padding: 10px;" class="col-lg-3 has-shadow">
                                             <a href="javascript:void(0)" @click="$emit('user-changed', user.id);" style="display: block;" class="d-flex align-items-center">
-                                                <avatar :uuid="user.avatarId"></avatar>
+                                                <avatar :user-id="user.id"></avatar>
                                                 <div style="margin-left: 10px">
                                                     <span class="h4">{{ user.name }}</span>
                                                     <small class="text-secondary">{{ user.email }}</small>
@@ -213,8 +213,7 @@ export default {
                 this.searchResult.push({
                     id: resp.data.userId,
                     name: resp.data.name,
-                    email: resp.data.email,
-                    avatarId: resp.data.avatarId
+                    email: resp.data.email
                 });
             })
             .catch(err => {
@@ -236,8 +235,7 @@ export default {
                         this.follower.push({
                             id: resp.data.userId,
                             name: resp.data.name,
-                            email: resp.data.email,
-                            avatarId: resp.data.avatarId
+                            email: resp.data.email
                         });
                     })
                     .catch(err => {
@@ -268,7 +266,6 @@ export default {
                             id: resp.data.userId,
                             name: resp.data.name,
                             email: resp.data.email,
-                            avatarId: resp.data.avatarId
                         });
                     })
                     .catch(err => {

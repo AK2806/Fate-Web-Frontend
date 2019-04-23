@@ -1,13 +1,17 @@
 <template>
     <div>
-        <header class="page-header">
+        <header v-if="!onlyView" class="page-header">
             <div class="container-fluid">
                 <h2 class="no-margin-bottom">角色卡</h2>
             </div>
         </header>
-        <div class="breadcrumb-holder container-fluid">
-            <div class="breadcrumb">
+        <div v-if="!onlyView" class="breadcrumb-holder container-fluid">
+            <div v-if="!canSelect" class="breadcrumb">
                 <button class="btn btn-primary breadcrumb-item" @click="$emit('ok')">返回</button>
+            </div>
+            <div v-if="canSelect" class="breadcrumb breadcrumb-item">
+                <button class="btn btn-secondary mx-2" @click="$emit('ok')">返回</button>
+                <button  class="btn btn-primary mx-2" @click="$emit('select-character')">确定</button>
             </div>
         </div>
         <!-- Edit Character -->
@@ -149,6 +153,14 @@ export default {
         initData: {
             type: Object,
             required: true
+        },
+        canSelect: {
+            type: Boolean,
+            default: false
+        },
+        onlyView: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
