@@ -20,7 +20,7 @@ import pageAssetsStore from './assets-store.vue';
 import pageAnnouncement from './announcement.vue';
 
 import pageAnnouncementPosting from './console/announcement-posting.vue';
-import pageStatistics from './console/statistics.vue';
+import pageGameMonitor from './console/game-monitor.vue';
 
 import '../css/console.css';
 
@@ -270,8 +270,8 @@ const adminMenu = {
             items: [
                 {
                     type: 'item',
-                    id: 'statistics',
-                    html: '<i class="fa fa-bar-chart" aria-hidden="true"></i>数据统计'
+                    id: 'game-monitor',
+                    html: '<i class="fa fa-tachometer" aria-hidden="true"></i>系统监控'
                 },
                 {
                     type: 'item',
@@ -649,8 +649,8 @@ Axios.get('/auth/authentication')
                                 }
                             },
                             {
-                                path: 'statistics',
-                                component: pageStatistics,
+                                path: 'game-monitor',
+                                component: pageGameMonitor,
                                 props(route) {
                                     let props = { };
                                     props.userId = parseInt(route.params.userId);

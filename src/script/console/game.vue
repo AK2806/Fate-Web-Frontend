@@ -145,8 +145,8 @@
                       <p class="text-secondary m-0">类型：{{ game.modUuid ? '完整游戏桌' : '快速游戏桌' }}</p>
                       <p v-if="game.modUuid" class="text-secondary m-0">装载模组：{{ game.modUuid }}</p>
                       <p class="m-0">
-                        <span v-if="game.status == 0" class="text-orange"><i class="fa fa-eercast" aria-hidden="true"></i>准备阶段</span>
-                        <span v-if="game.status == 1" class="text-green"><i class="fa fa-eercast" aria-hidden="true"></i>游戏进度已保存</span>
+                        <span v-if="game.status == 0" class="text-orange"><i class="fa fa-eercast" aria-hidden="true"></i>准备中</span>
+                        <span v-if="game.status == 1" class="text-green"><i class="fa fa-eercast" aria-hidden="true"></i>可游戏</span>
                         <span v-if="game.status == 2" class="text-gray"><i class="fa fa-eercast" aria-hidden="true"></i>已结束</span>
                       </p>
                     </div>
@@ -163,9 +163,9 @@
                       </div>
                     </div>
                     <div v-if="selfId == userId" class="mx-4">
-                      <button type="button" class="btn btn-primary" @click="mode = 'playerManager'; selectedDMGameIdx = index;">玩家管理</button>
-                      <button type="button" class="btn btn-success">完成准备</button>
-                      <button type="button" class="btn btn-danger" @click="invalidGame(game.uuid)">关闭游戏</button>
+                      <button v-if="game.status == 0" type="button" class="btn btn-primary" @click="mode = 'playerManager'; selectedDMGameIdx = index;">玩家管理</button>
+                      <button v-if="game.status == 0" type="button" class="btn btn-success" @click="makeGameReady(game.uuid)">完成准备</button>
+                      <button v-if="game.status != 2" type="button" class="btn btn-danger" @click="invalidGame(game.uuid)">关闭游戏</button>
                     </div>
                   </div>
                 </div>
@@ -220,8 +220,8 @@
                       <p class="text-secondary m-0">类型：{{ game.modUuid ? '完整游戏桌' : '快速游戏桌' }}</p>
                       <p v-if="game.modUuid" class="text-secondary m-0">装载模组：{{ game.modUuid }}</p>
                       <p class="m-0">
-                        <span v-if="game.status == 0" class="text-orange"><i class="fa fa-eercast" aria-hidden="true"></i>准备阶段</span>
-                        <span v-if="game.status == 1" class="text-green"><i class="fa fa-eercast" aria-hidden="true"></i>游戏进度已保存</span>
+                        <span v-if="game.status == 0" class="text-orange"><i class="fa fa-eercast" aria-hidden="true"></i>准备中</span>
+                        <span v-if="game.status == 1" class="text-green"><i class="fa fa-eercast" aria-hidden="true"></i>可游戏</span>
                         <span v-if="game.status == 2" class="text-gray"><i class="fa fa-eercast" aria-hidden="true"></i>已结束</span>
                       </p>
                     </div>
@@ -238,7 +238,7 @@
                       </div>
                     </div>
                     <div v-if="selfId == userId" class="mx-4">
-                      <button type="button" class="btn btn-primary" @click="openCharacterList(); selectedPlayerGameIdx = index;">选择角色卡</button>
+                      <button type="button" v-if="game.status == 0" class="btn btn-primary" @click="openCharacterList(); selectedPlayerGameIdx = index;">选择角色卡</button>
                       <button type="button" class="btn btn-info" :disabled="!game.players.find(e => e.userId == userId).characterUuid"
                         @click="viewCharacter(game.players.find(e => e.userId == userId).characterUuid)">查看我的角色</button>
                     </div>
@@ -529,7 +529,7 @@ export default {
         characterId: characterUuid
       })
       .then(() => {
-        this.fetchGamesAsPlayer();
+        this.updateGameAsPlayerList(this.gameAsPlayerPageIdx);
       })
       .catch(err => {
         console.error(err);
@@ -584,6 +584,24 @@ export default {
           });
         });
       })
+    },
+    makeGameReady(gameUuid) {
+      Axios.put('/persona/game/' + gameUuid)
+      .then(resp => {
+        Swal.fire({
+          title: '完成',
+          text: '该游戏桌可以开始游戏了',
+          type: 'success'
+        });
+        this.updateGameAsDMList(this.gameAsDMPageIdx);
+      })
+      .catch(err => {
+        Swal.fire({
+          title: '错误',
+          text: '部分玩家未设置角色卡',
+          type: 'error'
+        });
+      });
     },
     invalidGame(gameUuid) {
       Swal.fire({
