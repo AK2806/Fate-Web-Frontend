@@ -271,7 +271,7 @@ const adminMenu = {
                 {
                     type: 'item',
                     id: 'game-monitor',
-                    html: '<i class="fa fa-tachometer" aria-hidden="true"></i>系统监控'
+                    html: '<i class="fa fa-tachometer" aria-hidden="true"></i>系统管理'
                 },
                 {
                     type: 'item',

@@ -2,11 +2,33 @@
   <div>
     <header class="page-header">
       <div class="container-fluid">
-        <h2 class="no-margin-bottom">游戏实例监测</h2>
+        <h2 class="no-margin-bottom">系统管理</h2>
       </div>
     </header>
     <section>
       <div class="container-fluid">
+        <div class="row">
+          <div class="card w-100">
+            <div class="card-header d-flex align-items-center">
+              <h3 class="h4 px-3">数据统计</h3>
+              <button type="button" class="btn btn-info" @click="refreshStatistics"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            </div>
+            <div class="card-body">
+              <div class="p-4">
+                <div class="row m-4">
+                  <h1 class="h1">注册用户数：{{ usersCount }}</h1>
+                </div>
+                <div class="row m-4">
+                  <h1 class="h1">累计游戏局数：{{ gameTablesCount }}</h1>
+                </div>
+                <div class="row m-4">
+                  <h3 class="h3">过去12小时的游戏局数统计：</h3>
+                  <canvas id="lineChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="card w-100">
             <div class="card-header d-flex align-items-center">
@@ -120,13 +142,17 @@ import urljoin from "url-join";
 import "jquery-validation";
 import uuid from "uuid/v1";
 import avatar from "../components/avatar.vue";
+import Chart from "chart.js";
 
 export default {
   data() {
     return {
+      usersCount: 0,
+      gameTablesCount: 0,
       gameInstancesCountPerPage: 5,
       gameInstancesPageIdx: 0,
-      gameInstances: []
+      gameInstances: [],
+      lineChart: null
     };
   },
   computed: {
@@ -135,10 +161,99 @@ export default {
     }
   },
   mounted() {
+    let LINECHART = $('#lineChart');
+    this.lineChart = new Chart(LINECHART, {
+        type: 'line',
+        options: {
+            legend: {labels:{fontColor:"#777", fontSize: 12}},
+            scales: {
+                xAxes: [{
+                    display: true,
+                    gridLines: {
+                        color: '#eee'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        color: '#eee'
+                    },
+                    ticks: {
+                        min: 0,
+                        suggestedMax: 10
+                    }
+                }]
+            },
+        },
+        data: {
+            labels: ['00:00','00:00','00:00','00:00','00:00','00:00','00:00','00:00','00:00','00:00','00:00','00:00'],
+            datasets: [
+                {
+                    label: "游戏桌数",
+                    fill: true,
+                    lineTension: 0.3,
+                    backgroundColor: 'rgba(76, 162, 205, 0.85)',
+                    borderColor: 'rgba(76, 162, 205, 0.85)',
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    borderWidth: 1,
+                    pointBorderColor: 'rgba(76, 162, 205, 0.85)',
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: 'rgba(76, 162, 205, 0.85)',
+                    pointHoverBorderColor: "rgba(220, 220, 220, 1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [],
+                    spanGaps: false
+                }
+            ]
+        }
+    });
+    this.refreshStatistics();
     this.fetchGameInstances();
   },
   methods: {
     $,
+    refreshStatistics() {
+      Axios.get('/console/statistics/users-count')
+      .then(resp => {
+        this.usersCount = resp.data.count;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+      Axios.get('/console/statistics/gaming-records-count')
+      .then(resp => {
+        this.gameTablesCount = resp.data.count;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+      Axios.get('/console/statistics/gaming-records-count/last-12-hours')
+      .then(resp => {
+        let countRespList = resp.data;
+        var now = new Date();
+        for (let i = 11; i >= 0; --i) {
+          this.lineChart.data.labels[i] = now.getHours().toString().padStart(2, '0') + ':00';
+          now.setHours(now.getHours() - 1);
+          this.lineChart.data.labels[i] = now.getHours().toString().padStart(2, '0') + ':00 ~ ' + this.lineChart.data.labels[i];
+        }
+        let data = this.lineChart.data.datasets[0].data;
+        data.splice(0, data.length);
+        for (let i = countRespList.length - 1; i >= 0; --i) {
+          this.lineChart.data.datasets[0].data.push(countRespList[i].count);
+        }
+        this.lineChart.update();
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
     fetchGameInstances() {
       Axios.get("/console/game-instance")
         .then(resp => {
@@ -202,7 +317,34 @@ export default {
         });
     },
     forceStopInstance(gameUuid) {
-      
+      Swal.fire({
+          title: '确定要强制终止这个进程吗？',
+          type: 'warning',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: '是',
+          cancelButtonText: '否'
+      })
+      .then(result => {
+          if (result.value) {
+              Axios.delete('/console/game-instance/' + gameUuid)
+              .then(() => {
+                  Swal.fire({
+                      title: '成功',
+                      text: '进程已终止',
+                      type: 'success'
+                  });
+                  this.fetchGameInstances();
+              })
+              .catch(err => {
+                  Swal.fire({
+                      title: '错误',
+                      text: err.response ? err.response.data.message : err.message,
+                      type: 'error'
+                  });
+              });
+          }
+      });
     }
   },
   components: {

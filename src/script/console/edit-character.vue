@@ -379,7 +379,7 @@ export default {
         $('select').selectpicker('refresh');
         if (this.initData != null && this.isCreation === false) {
             this.uuid = this.initData.uuid;
-            this.portrait.fileData = urljoin(apiUrlPrefix, 'img/character', this.initData.portrait.id)
+            //this.portrait.fileData = urljoin(apiUrlPrefix, 'img/character', this.initData.portrait.id)
             this.portrait.stature = this.initData.portrait.stature;
             this.name = this.initData.name;
             this.description = this.initData.description;
