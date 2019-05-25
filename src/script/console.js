@@ -612,6 +612,7 @@ Axios.get('/auth/authentication')
                                 component: pageMod,
                                 props(route) {
                                     let props = { };
+                                    props.selfId = vueData.selfId;
                                     props.userId = parseInt(route.params.userId);
                                     return props;
                                 }

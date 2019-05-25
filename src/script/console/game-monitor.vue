@@ -160,6 +160,11 @@ export default {
       return Math.ceil(this.gameInstances.length / this.gameInstancesCountPerPage);
     }
   },
+  watch: {
+    gameInstancesPageIdx: function(newVal, oldVal) {
+      this.fetchGameInstances(newVal);
+    }
+  },
   mounted() {
     let LINECHART = $('#lineChart');
     this.lineChart = new Chart(LINECHART, {
@@ -254,10 +259,10 @@ export default {
         console.error(err);
       })
     },
-    fetchGameInstances() {
+    fetchGameInstances(page) {
       Axios.get("/console/game-instance")
         .then(resp => {
-          this.gameInstancesPageIdx = 0;
+          this.gameInstancesPageIdx = page ? page : 0;
           this.gameInstances.splice(0, this.gameInstances.length);
           for (let i in resp.data.gameInstances) {
             let gameInstance = resp.data.gameInstances[i];
